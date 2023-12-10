@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Codeforces Contests",
+  "version": "1.0.0",
+  "description": "Extension for cf contest details",
+  "background": {
+  },
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  }
+}
+

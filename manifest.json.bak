@@ -1,0 +1,10 @@
+{
+    "name": "Codeforces Chrome Extension",
+    "description": "Extension for cf contest details",
+    "version": "1.0.1",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_popup": "index.html",
+        "default_title": "cf extension"
+    }
+}

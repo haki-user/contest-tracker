@@ -1,0 +1,9 @@
+.contestsCard-container {
+    transition: transform 0.2s;
+    transform-origin: center;
+    border-radius: 10px;
+}
+
+.contestsCard-container:hover {
+    transform: scale(1.05);
+}
