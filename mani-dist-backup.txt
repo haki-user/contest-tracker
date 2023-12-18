@@ -4,16 +4,12 @@
   "version": "1.0.0",
   "description": "Extension for cf contest details",
   "background": {
-    "service_worker": "background.js"
   },
   "permissions": [
     "storage"
   ],
   "action": {
     "default_popup": "index.html"
-  },
-   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }
 
