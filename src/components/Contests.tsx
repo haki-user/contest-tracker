@@ -39,7 +39,7 @@ export const Contests: React.FC = () => {
             },
           }
         );
-        console.log('data', res.data, 'datare', res.data.result);
+      console.log("data", res.data, "datare", res.data.result);
       const data = res.data.result.filter(
         (contest) => contest.phase === "BEFORE"
       );

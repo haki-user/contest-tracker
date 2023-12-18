@@ -115,7 +115,8 @@ export const ContestsCard: React.FC<IContest> = ({
         <span
           style={{
             fontSize: 14,
-            color: remSeconds&&remSeconds/60/60/24<1?"red":"white",
+            color:
+              remSeconds && remSeconds / 60 / 60 / 24 < 1 ? "red" : "white",
           }}
         >
           {
@@ -128,7 +129,7 @@ export const ContestsCard: React.FC<IContest> = ({
           style={{
             margin: "10px",
             // color: colors[type]
-            color: "#FF8E2B"
+            color: "#FF8E2B",
           }}
         >
           {type}

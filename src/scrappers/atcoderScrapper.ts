@@ -6,7 +6,7 @@ const baseURL = "https://atcoder.jp";
 
 export const getAtcoderContests = async () => {
   try {
-    const { data } = await axios.get(baseURL + '/contests/');
+    const { data } = await axios.get(baseURL + "/contests/");
 
     const $ = load(data);
     const upcomingContestsDiv = $("div#contest-table-upcoming");
