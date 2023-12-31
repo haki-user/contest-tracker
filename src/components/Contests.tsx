@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
-import { useProgress } from "../hooks/useProgress";
 import { ContestsCard } from "./ContestsCard";
 // import { getAtcoderContests } from '../scrappers/atcoderScrapper'
 
@@ -28,24 +27,14 @@ export interface IContest {
 
 export const Contests: React.FC = () => {
   const [contests, setContests] = useState<IContest[]>([]);
-  const { startRequest, updateProgress, finishRequest } = useProgress();
   const fetch_contests = async () => {
     try {
-      startRequest();
       const res: AxiosResponse<{ status: string; result: IContest[] }> =
         await axios.get<{ status: string; result: IContest[] }>(
           "contest.list",
           {
             params: {
               phase: "BEFORE",
-            },
-            onDownloadProgress: (progressEvent) => {
-              updateProgress(
-                Math.round(
-                  (progressEvent.loaded * 100) /
-                    (progressEvent.total || progressEvent.loaded)
-                )
-              );
             },
           }
         );
@@ -86,8 +75,6 @@ export const Contests: React.FC = () => {
       );
     } catch (e) {
       console.log(e);
-    } finally {
-      finishRequest();
     }
   };
 
