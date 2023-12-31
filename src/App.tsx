@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 import axios from "axios";
 import { Contests } from "./components/Contests";
@@ -10,19 +10,27 @@ axios.defaults.baseURL = "https://api-contest-tracker.onrender.com/";
 const axiosInstance = axios;
 function App() {
   const [isHome, setIsHome] = useState(true);
-  const [contestType, setContestType] = useState<{
+  const [contestTypes, setContestTypes] = useState<{
     [key in Contest_type]: boolean;
-  }>({
-    CF: true,
-    IOI: true,
-    ICPC: true,
-    LEETCODE: true,
-    ATCODER: true,
-    CODECHEF: true,
-  });
+  }>(
+    localStorage.getItem("contestTypes")
+      ? JSON.parse(localStorage.getItem("contestTypes") || "")
+      : {
+          CF: true,
+          IOI: true,
+          ICPC: true,
+          LEETCODE: true,
+          ATCODER: true,
+          CODECHEF: true,
+        }
+  );
   const refreshButtonRef = useRef<{ handleRefresh: () => void }>(null);
   const toggleContestType = (contest: Contest_type) => {
-    setContestType((prev) => {
+    // localStorage.setItem(
+    //   "contestTypes",
+    //   JSON.stringify({ ...contestTypes, [contest]: !contestTypes[contest] })
+    // );
+    setContestTypes((prev) => {
       return { ...prev, [contest]: !prev[contest] };
     });
   };
@@ -54,13 +62,13 @@ function App() {
             gap: 2,
           }}
         >
-          {Object.entries(contestType).map(([key, value], index) => {
+          {Object.entries(contestTypes).map(([key, value], index) => {
             return (
               <div
                 key={index}
                 style={{
                   borderRight:
-                    index < Object.keys(contestType).length - 1
+                    index < Object.keys(contestTypes).length - 1
                       ? "1px solid #ccc"
                       : "none",
                 }}
@@ -89,7 +97,7 @@ function App() {
         </button>
       </div>
       {isHome ? (
-        <Contests contestTypes={contestType} ref={refreshButtonRef}></Contests>
+        <Contests contestTypes={contestTypes} ref={refreshButtonRef}></Contests>
       ) : (
         <div>profile</div>
       )}

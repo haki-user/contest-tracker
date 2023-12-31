@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import { ContestsCard } from "./ContestsCard";
 // import { getAtcoderContests } from '../scrappers/atcoderScrapper'
@@ -50,6 +45,7 @@ export const Contests = forwardRef<
   }
 >(({ contestTypes }, ref) => {
   const [contests, setContests] = useState<IContest[]>([]);
+
   const handleRefresh = () => {
     setContests([]);
     fetch_contests();
@@ -58,7 +54,9 @@ export const Contests = forwardRef<
   useImperativeHandle(ref, () => ({
     handleRefresh,
   }));
+
   const fetch_contests = async () => {
+    console.log("fetch");
     if (cancelTokenSource) cancelTokenSource.cancel();
     const cancelToken = createCancelToken();
     try {
@@ -89,30 +87,41 @@ export const Contests = forwardRef<
         "contests",
         JSON.stringify({ data: data, time: Date.now() })
       );
+      localStorage.setItem("contestTypes", JSON.stringify(contestTypes));
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
+    console.log("useEffect");
     setContests((data) => data.filter((contest) => contestTypes[contest.type]));
-    fetch_contests();
-  }, [contestTypes]);
-
-  useEffect(() => {
-    // console.log("useEffect");
     if (localStorage.getItem("contests")) {
-      const { data, time } = JSON.parse(
-        localStorage.getItem("contests") || "{}"
+      const {
+        data,
+        time,
+      }: {
+        data: IContest[];
+        time: number;
+      } = JSON.parse(localStorage.getItem("contests") || "{}");
+      const prevContestTypes: Record<Contest_type, boolean> = JSON.parse(
+        localStorage.getItem("contestTypes") || "{}"
       );
-    // console.log(data, Date.now() - time);
-      if (Date.now() - time < 1000 * 60 * 60 * 60 * 24) {
-        setContests(data);
+
+      if (
+        Date.now() - time < 1000 * 60 * 60 * 60 * 24 &&
+        contestTypes &&
+        prevContestTypes &&
+        JSON.stringify(Object.entries(contestTypes).sort()) ===
+          JSON.stringify(Object.entries(prevContestTypes).sort())
+      ) {
+        console.log("local");
+        setContests(data.filter((contest) => contestTypes[contest.type]));
         return;
       }
     }
     fetch_contests();
-  }, []);
+  }, [contestTypes]);
 
   return (
     <div
