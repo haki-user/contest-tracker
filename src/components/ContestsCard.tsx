@@ -42,6 +42,7 @@ export const ContestsCard: React.FC<IContest> = ({
   }, [startTimeSeconds]);
 
   const formatRemainingTime = (remainingTime: number) => {
+    if(remainingTime < 0) return "00:00:00:00";
     const days = Math.floor(remainingTime / (3600 * 24));
     const hours = Math.floor((remainingTime / 3600) % 24);
     const mins = Math.floor((remainingTime / 60) % 60);
