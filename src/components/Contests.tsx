@@ -44,24 +44,24 @@ export const Contests: React.FC = () => {
         (contest) => contest.phase === "BEFORE"
       );
 
-     const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
-        await axios.get<{ status: string; result: IContest[] }>(
-          "https://codeforces.com/api/contest.list",
-          {
-            params: {
-              phase: "BEFORE",
-            },
-          }
-        );
-      // add url to codeforces contests
-      codeforces.data.result.forEach((contest) => {
-        contest.href = `https://codeforces.com/contests/${contest.id}`;
-      });
-      data.push(
-        ...codeforces.data.result.filter(
-          (contest) => contest.phase === "BEFORE"
-        )
-      );
+    // const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
+    //    await axios.get<{ status: string; result: IContest[] }>(
+    //      "https://codeforces.com/api/contest.list",
+    //      {
+    //        params: {
+    //          phase: "BEFORE",
+    //        },
+    //      }
+    //    );
+    //  // add url to codeforces contests
+    //  codeforces.data.result.forEach((contest) => {
+    //    contest.href = `https://codeforces.com/contests/${contest.id}`;
+    //  });
+    //  data.push(
+    //    ...codeforces.data.result.filter(
+    //      (contest) => contest.phase === "BEFORE"
+    //    )
+    //  );
 
       setContests(
         data.sort((a, b) => {
