@@ -44,7 +44,7 @@ export const Contests: React.FC = () => {
         (contest) => contest.phase === "BEFORE"
       );
 
-      const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
+     const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
         await axios.get<{ status: string; result: IContest[] }>(
           "https://codeforces.com/api/contest.list",
           {
@@ -86,7 +86,7 @@ export const Contests: React.FC = () => {
         localStorage.getItem("contests") || "{}"
       );
       console.log(data, Date.now() - time);
-      if (Date.now() - time < 1000 * 60 * 5) {
+      if (Date.now() - time < 1000 * 60 * 60 * 60 * 24) {
         setContests(data);
         return;
       }
@@ -105,6 +105,15 @@ export const Contests: React.FC = () => {
         height: "100%",
       }}
     >
+      <div
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          setContests([]);
+          fetch_contests();
+        }}
+      >
+        Refresh
+      </div>
       {contests.length > 0
         ? contests.map((contest, idx) => {
             return <ContestsCard {...contest} key={idx}></ContestsCard>;
