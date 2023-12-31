@@ -121,6 +121,7 @@ export const Contests = forwardRef<
       }
     }
     fetch_contests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contestTypes]);
 
   return (
