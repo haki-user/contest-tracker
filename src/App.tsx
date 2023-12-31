@@ -41,6 +41,9 @@ function App() {
       <div
         className="header"
         style={{
+          position: "sticky",
+          zIndex: 1,
+          top: 0,
           paddingTop: 10,
           overflow: "hidden",
           backgroundColor: "purple",
@@ -62,45 +65,52 @@ function App() {
             gap: 2,
           }}
         >
-          {Object.entries(contestTypes).map(([key, value], index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  borderRight:
-                    index < Object.keys(contestTypes).length - 1
-                      ? "1px solid #ccc"
-                      : "none",
-                }}
-              >
-                <label
-                  htmlFor={`inp-cont-type-${key}`}
+          {Object.entries(contestTypes)
+            .sort()
+            .map(([key, value], index) => {
+              return (
+                <div
+                  key={index}
                   style={{
-                    cursor: "pointer",
+                    borderRight:
+                      index < Object.keys(contestTypes).length - 1
+                        ? "1px solid #ccc"
+                        : "none",
                   }}
                 >
-                  {key}
-                </label>
-                <input
-                  name={`inp-cont-type-${key}`}
-                  id={`inp-cont-type-${key}`}
-                  type="checkbox"
-                  checked={value}
-                  onChange={() => toggleContestType(key as Contest_type)}
-                />
-              </div>
-            );
-          })}
+                  <label
+                    htmlFor={`inp-cont-type-${key}`}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    {key}
+                  </label>
+                  <input
+                    name={`inp-cont-type-${key}`}
+                    id={`inp-cont-type-${key}`}
+                    type="checkbox"
+                    checked={value}
+                    onChange={() => toggleContestType(key as Contest_type)}
+                  />
+                </div>
+              );
+            })}
         </div>
         <button onClick={() => refreshButtonRef.current?.handleRefresh()}>
           Refresh
         </button>
       </div>
-      {isHome ? (
-        <Contests contestTypes={contestTypes} ref={refreshButtonRef}></Contests>
-      ) : (
-        <div>profile</div>
-      )}
+      <div className="body">
+        {isHome ? (
+          <Contests
+            contestTypes={contestTypes}
+            ref={refreshButtonRef}
+          ></Contests>
+        ) : (
+          <div>profile</div>
+        )}
+      </div>
     </div>
   );
 }

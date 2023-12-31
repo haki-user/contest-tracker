@@ -4,12 +4,12 @@ import { ContestsCard } from "./ContestsCard";
 // import { getAtcoderContests } from '../scrappers/atcoderScrapper'
 
 export type Contest_type =
-  | "CF"
-  | "IOI"
-  | "ICPC"
   | "ATCODER"
+  | "CF"
+  | "CODECHEF"
+  | "ICPC"
+  | "IOI"
   | "LEETCODE"
-  | "CODECHEF";
 
 type Contest_phase =
   | "BEFORE"
