@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from "axios";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import { ContestsCard } from "./ContestsCard";
 // import { getAtcoderContests } from '../scrappers/atcoderScrapper'
 
-type Contest_type = "CF" | "IOI" | "ICPC" | "ATCODER" | "LEETCODE" | "CODECHEF";
+export type Contest_type =
+  | "CF"
+  | "IOI"
+  | "ICPC"
+  | "ATCODER"
+  | "LEETCODE"
+  | "CODECHEF";
 
 type Contest_phase =
   | "BEFORE"
@@ -25,42 +36,47 @@ export interface IContest {
   ratingRange?: string;
 }
 
-export const Contests: React.FC = () => {
+let cancelTokenSource: CancelTokenSource | null;
+const createCancelToken = () => {
+  cancelTokenSource = axios.CancelToken.source();
+  return cancelTokenSource.token;
+};
+export const Contests = forwardRef<
+  {
+    handleRefresh: () => void;
+  },
+  {
+    contestTypes: { [key in Contest_type]: boolean };
+  }
+>(({ contestTypes }, ref) => {
   const [contests, setContests] = useState<IContest[]>([]);
+  const handleRefresh = () => {
+    setContests([]);
+    fetch_contests();
+  };
+  // console.log(contestTypes);
+  useImperativeHandle(ref, () => ({
+    handleRefresh,
+  }));
   const fetch_contests = async () => {
+    if (cancelTokenSource) cancelTokenSource.cancel();
+    const cancelToken = createCancelToken();
     try {
       const res: AxiosResponse<{ status: string; result: IContest[] }> =
         await axios.get<{ status: string; result: IContest[] }>(
           "contest.list",
           {
+            cancelToken,
             params: {
               phase: "BEFORE",
+              contestTypes,
             },
           }
         );
-      console.log("data", res.data, "datare", res.data.result);
+      // console.log("data", res.data, "datare", res.data.result);
       const data = res.data.result.filter(
-        (contest) => contest.phase === "BEFORE"
+        (contest) => contest.phase === "BEFORE" && contestTypes[contest.type]
       );
-
-      // const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
-      //    await axios.get<{ status: string; result: IContest[] }>(
-      //      "https://codeforces.com/api/contest.list",
-      //      {
-      //        params: {
-      //          phase: "BEFORE",
-      //        },
-      //      }
-      //    );
-      //  // add url to codeforces contests
-      //  codeforces.data.result.forEach((contest) => {
-      //    contest.href = `https://codeforces.com/contests/${contest.id}`;
-      //  });
-      //  data.push(
-      //    ...codeforces.data.result.filter(
-      //      (contest) => contest.phase === "BEFORE"
-      //    )
-      //  );
 
       setContests(
         data.sort((a, b) => {
@@ -79,12 +95,17 @@ export const Contests: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect");
+    setContests((data) => data.filter((contest) => contestTypes[contest.type]));
+    fetch_contests();
+  }, [contestTypes]);
+
+  useEffect(() => {
+    // console.log("useEffect");
     if (localStorage.getItem("contests")) {
       const { data, time } = JSON.parse(
         localStorage.getItem("contests") || "{}"
       );
-      console.log(data, Date.now() - time);
+    // console.log(data, Date.now() - time);
       if (Date.now() - time < 1000 * 60 * 60 * 60 * 24) {
         setContests(data);
         return;
@@ -102,17 +123,9 @@ export const Contests: React.FC = () => {
         overflow: "visible",
         width: "100%",
         height: "100%",
+        padding: 6,
       }}
     >
-      <div
-        style={{ cursor: "pointer" }}
-        onClick={() => {
-          setContests([]);
-          fetch_contests();
-        }}
-      >
-        Refresh
-      </div>
       {contests.length > 0
         ? contests.map((contest, idx) => {
             return <ContestsCard {...contest} key={idx}></ContestsCard>;
@@ -120,4 +133,4 @@ export const Contests: React.FC = () => {
         : null}
     </div>
   );
-};
+});
