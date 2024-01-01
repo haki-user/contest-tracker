@@ -22,17 +22,20 @@
 //
 // getCodechefContests();
 //import axios from 'axios';
-import puppeteer from "puppeteer";
+import type { ElementHandle } from "puppeteer";
+import { launch } from "puppeteer";
 import { log } from "@repo/logger";
 //import { IContest } from './types';
 
 const baseURL = "https://codechef.com";
 
-export const getCodechefContests = async () => {
+export const getCodechefContests = async (): Promise<
+  { name: string; startTimeSeconds: number }[]
+> => {
   try {
-    const browser = await puppeteer.launch();
+    const browser = await launch();
     const page = await browser.newPage();
-    await page.goto(baseURL + "/contests");
+    await page.goto(`${baseURL}/contests`);
 
     // Wait for the table to be rendered (you may need to adjust the selector)
     await page.waitForSelector("tbody.MuiTableBody-root");
@@ -40,14 +43,16 @@ export const getCodechefContests = async () => {
     const tableRows = await page.$$(
       "tbody.MuiTableBody-root tr.MuiTableRow-root"
     );
-    const contests = [];
-    console.log(tableRows, tableRows.toString());
-    for (const row of tableRows) {
+    // const contests = [];
+    // console.log(tableRows, tableRows.toString());
+    const processRow = async (
+      row: ElementHandle<HTMLTableRowElement>
+    ): Promise<{ name: string; startTimeSeconds: number }> => {
       const columns = await row.$$("td.MuiTableCell-root");
 
       // Extract contest name
       const contestName = await columns[0].$eval("div.jss61.jss66 p", (el) => {
-        if (el && el.textContent) el.textContent.trim();
+        if (el.textContent) el.textContent.trim();
         return "non";
       });
 
@@ -55,20 +60,25 @@ export const getCodechefContests = async () => {
       const startDate = await columns[1].$eval(
         "div.jss61.jss66 div._timer__container_1c9os_518 p",
         (el) => {
-          if (el && el.textContent) el.textContent.trim();
+          if (el.textContent) el.textContent.trim();
           return 0;
         }
       );
 
-      contests.push({
-        name: contestName,
-        startTimeSeconds: startDate || 0,
-      });
-    }
+      // contests.push({
+      //   name: contestName,
+      //   startTimeSeconds: startDate || 0,
+      // });
+      return { name: contestName, startTimeSeconds: startDate || 0 };
+    };
+    //for (const row of tableRows) {
+    //}
+    const promises = tableRows.map(processRow);
+    const res = Promise.all(promises);
 
     await browser.close();
-    console.log(contests);
-    return contests;
+    // console.log(contests);
+    return res;
   } catch (e) {
     log("CodeChef error", e);
     throw new Error("Error Scrapping Codechef Contests");

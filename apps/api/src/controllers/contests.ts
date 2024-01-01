@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { log } from "@repo/logger";
-import { ContestType, ContestSelection, IContest } from "@repo/types";
+import type { ContestType, ContestSelection, IContest } from "@repo/types";
 import {
   getContests,
   getAtcoderContests,
@@ -13,14 +13,14 @@ import {
 export const getSelectedContestsController = async (
   req: Request,
   res: Response
-) => {
+): Promise<void> => {
   try {
-    const query = req.query.contestType as string;
+    const query = req.query.contestTypes as string;
     if (!query) {
       res.sendStatus(400);
       return;
     }
-    const contestTypes: ContestSelection = JSON.parse(query);
+    const contestTypes = JSON.parse(query) as ContestSelection;
     const contests = await getContests(contestTypes);
     res.json({ contests });
   } catch (e) {
@@ -29,7 +29,10 @@ export const getSelectedContestsController = async (
   }
 };
 
-export const getContestController = async (req: Request, res: Response) => {
+export const getContestController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const contestType: ContestType | undefined = req.params
       .contestType as ContestType;
@@ -39,10 +42,13 @@ export const getContestController = async (req: Request, res: Response) => {
       case "ATCODER":
         contestsData = await getAtcoderContests();
         break;
-      case "CF" || "ICPC" || "IOI":
+      case "CF":
+      case "ICPC":
+      case "IOI": {
         const result: IContest[] = await getCodeforcesContests();
         contestsData = result.filter((contest) => contest.type === contestType);
         break;
+      }
       case "CODECHEF":
         // contestsData = await getCodechefContests();
         throw new Error("Codechef contests not available");
@@ -52,7 +58,6 @@ export const getContestController = async (req: Request, res: Response) => {
         break;
     }
     res.json({ contestsData });
-    return;
   } catch (e) {
     res.sendStatus(500);
     log("Error in getContestController", e);

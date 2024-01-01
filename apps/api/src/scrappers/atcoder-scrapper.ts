@@ -1,15 +1,15 @@
 import axios from "axios";
 import { log } from "@repo/logger";
 import { load } from "cheerio";
-import { IContest } from "@repo/types";
+import type { IContest } from "@repo/types";
 
 const baseURL = "https://atcoder.jp";
 
-export const getAtcoderContests = async () => {
+export const getAtcoderContests = async (): Promise<IContest[]> => {
   try {
-    const { data } = await axios.get(baseURL + "/contests/");
+    const res = await axios.get(`${baseURL}/contests/`);
 
-    const $ = load(data);
+    const $ = load(res.data as string);
     const upcomingContestsDiv = $("div#contest-table-upcoming");
     const upcomingContestsTable = upcomingContestsDiv.find("table").eq(0);
     const upcomingContestsTableRows = upcomingContestsTable.find("tr");

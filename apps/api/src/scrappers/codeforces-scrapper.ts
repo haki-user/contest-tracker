@@ -1,8 +1,9 @@
-import axios, { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
+import axios from "axios";
 import { log } from "@repo/logger";
-import { IContest } from "@repo/types";
+import type { IContest } from "@repo/types";
 
-export const getCodeforcesContests = async () => {
+export const getCodeforcesContests = async (): Promise<IContest[]> => {
   try {
     const codeforces: AxiosResponse<{ status: string; result: IContest[] }> =
       await axios.get<{ status: string; result: IContest[] }>(

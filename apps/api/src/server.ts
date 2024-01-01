@@ -1,4 +1,5 @@
-import express, { type Express } from "express";
+import express, { json } from "express";
+import type { Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
@@ -9,7 +10,7 @@ export const createServer = (): Express => {
   app
     .disable("x-powered-by")
     .use(morgan("dev"))
-    .use(express.json())
+    .use(json())
     .use(cors())
     .use(helmet())
     .use(router);

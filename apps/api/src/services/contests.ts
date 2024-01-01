@@ -1,4 +1,4 @@
-import { IContest, ContestSelection } from "@repo/types";
+import type { IContest, ContestSelection } from "@repo/types";
 import { log } from "@repo/logger";
 import {
   getAtcoderContests,
