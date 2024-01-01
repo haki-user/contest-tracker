@@ -7,9 +7,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.1.0",
     "turbo": "latest"
   },
@@ -20,5 +23,18 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "lint-staged": {
+    "apps/**/*.{js, jsx, ts, tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "packages/**/*.{js, jsx, ts, tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
+  }
 }
