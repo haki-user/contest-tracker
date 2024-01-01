@@ -10,16 +10,17 @@ import {
 } from "../services/contests";
 
 // contests controller:-
-export const getSelectedContestsController = async (req: Request, res: Response) => {
+export const getSelectedContestsController = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const contestTypes: ContestSelection | null = JSON.parse(
-      req.params.contestTypes
-    );
-    if (contestTypes === null) {
-      // send contestTypes
-      res.send;
+    const query = req.query.contestType as string;
+    if (!query) {
+      res.sendStatus(400);
       return;
     }
+    const contestTypes: ContestSelection = JSON.parse(query);
     const contests = await getContests(contestTypes);
     res.json({ contests });
   } catch (e) {
@@ -33,23 +34,27 @@ export const getContestController = async (req: Request, res: Response) => {
     const contestType: ContestType | undefined = req.params
       .contestType as ContestType;
     let contestsData: IContest[] = [];
+
     switch (contestType) {
       case "ATCODER":
         contestsData = await getAtcoderContests();
+        break;
       case "CF" || "ICPC" || "IOI":
         const result: IContest[] = await getCodeforcesContests();
         contestsData = result.filter((contest) => contest.type === contestType);
+        break;
       case "CODECHEF":
         // contestsData = await getCodechefContests();
-        res.send(500);
         throw new Error("Codechef contests not available");
-        contestsData = [];
+        break;
       case "LEETCODE":
         contestsData = await getLeetcodeContests();
+        break;
     }
     res.json({ contestsData });
+    return;
   } catch (e) {
-    res.send(500);
+    res.sendStatus(500);
     log("Error in getContestController", e);
   }
 };
