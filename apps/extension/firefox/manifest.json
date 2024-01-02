@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Contests Tracker",
+  "version": "1.0.0",
+  "description": "Extension for programming contest details",
+  "icons": {
+    "16": "gojo1.png",
+    "48": "gojo1.png",
+    "128": "gojo1.png"
+  },
+  "permissions": ["storage"],
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "content_security_policy": "script-src 'self'; object-src 'self';"
+}

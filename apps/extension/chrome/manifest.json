@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Contest Tracker",
+  "version": "1.0.0",
+  "description": "Extension for programming contest details",
+  "icons": {
+    "16": "gojo1.png",
+    "48": "gojo1.png",
+    "128": "gojo1.png"
+  },
+  "background": {},
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://codeforces.com/*",
+    "https://api-contest-tracker.onrender.com/*"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
