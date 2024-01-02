@@ -104,6 +104,25 @@ export const Contests = forwardRef<
     // eslint-disable-next-line react-hooks/exhaustive-deps  -- Don't want to add fetchContests in dependency array
   }, [contestTypes]);
 
+  const generateKey = (contest: IContest): string => {
+    return (
+      contest.id?.toString() ||
+      contest.href ||
+      genHash(contest.name + contest.startTimeSeconds)
+    );
+  };
+  function genHash(s: string): string {
+    let hash = 0;
+    for (let i = 0; i < s.length; i++) {
+      const char = s.charCodeAt(i);
+      // eslint-disable-next-line no-bitwise -- why can't
+      hash = (hash << 5) - hash + char;
+      // eslint-disable-next-line no-bitwise -- idk
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash.toString();
+  }
+
   return (
     <div
       style={{
@@ -118,16 +137,7 @@ export const Contests = forwardRef<
     >
       {contests.length > 0
         ? contests.map((contest) => {
-            return (
-              <ContestsCard
-                {...contest}
-                key={`id${
-                  contest.id
-                    ? contest.id
-                    : contest.name + contest.startTimeSeconds
-                }`}
-              />
-            );
+            return <ContestsCard {...contest} key={generateKey(contest)} />;
           })
         : null}
     </div>
