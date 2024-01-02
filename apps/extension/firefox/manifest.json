@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "description": "Extension for programming contest details",
   "icons": {
-    "16": "gojo1.png",
-    "48": "gojo1.png",
-    "128": "gojo1.png"
+    "16": "gojo.png",
+    "48": "gojo.png",
+    "128": "gojo.png"
   },
   "permissions": ["storage"],
   "browser_action": {
