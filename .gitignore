@@ -11,3 +11,8 @@ dist-ssr
 server/dist
 public/dist
 contest-tracker*.zip
+
+#
+apps/admin
+apps/blog
+apps/storefront
