@@ -32,3 +32,22 @@ export const dayHM12ToSeconds = (dhm12: string) => {
   // console.log(new Date(contestTimeSeconds).toUTCString());
   return contestTimeSeconds / 1000;
 };
+
+export const convertHHMMSSToSeconds = (timeString: string): number | null => {
+  // Regular expression to match different time formats
+  const timeRegex = /^(\d{1,2}):?(\d{0,2}):?(\d{0,2})$/;
+
+  const match = timeString.match(timeRegex);
+
+  if (!match) {
+    return null; // Invalid time format
+  }
+
+  const [, hours, minutes, seconds] = match.map(Number);
+
+  // Calculate total seconds
+  const totalSeconds =
+    (hours || 0) * 3600 + (minutes || 0) * 60 + (seconds || 0);
+
+  return totalSeconds;
+};

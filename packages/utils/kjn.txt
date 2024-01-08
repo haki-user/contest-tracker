@@ -1,0 +1,13 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist/",
+    "rootDir": ".",
+    //"baseUrl": "src",
+    "lib": ["ES2015"],
+    // "types": ["chrome", "firefox-webext-browser", "jest"]
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"],
+}
+
