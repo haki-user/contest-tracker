@@ -4,7 +4,7 @@ import axios from "axios";
 import type { ContestType, ContestSelection } from "@repo/types";
 import { ProgressBar } from "react-axios-progressbar";
 import { Contests } from "./components/contests";
-// get url from env
+
 const url = import.meta.env.VITE_API_URL as string;
 axios.defaults.baseURL = url;
 const axiosInstance = axios;

@@ -71,9 +71,9 @@ export const Contests = forwardRef<
 
   useEffect(() => {
     setContests((data) => data.filter((contest) => contestTypes[contest.type]));
-    const localContestTypes = localStorage.getItem("contest");
-    if (localContestTypes) {
-      const { data, time } = JSON.parse(localContestTypes) as {
+    const localContestsData = localStorage.getItem("contests");
+    if (localContestsData) {
+      const { data, time } = JSON.parse(localContestsData) as {
         data: IContest[];
         time: number;
       };
