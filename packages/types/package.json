@@ -1,19 +1,18 @@
 {
   "name": "@repo/types",
   "version": "1.0.0",
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "license": "MIT",
   "private": true,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --format esm,cjs --dts",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist",
-    "dev": "tsup --format esm,cjs --watch --dts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/"
   },

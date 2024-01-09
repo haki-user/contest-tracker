@@ -1,4 +1,4 @@
-export const dayHM12ToSeconds = (dhm12: string) => {
+export const dayHM12ToSeconds = (dhm12: string): number => {
   const [day, HM, AMPM] = dhm12.split(" "); // Sunday, 8:00 AM
   const [hour, minute] = HM.split(":");
 

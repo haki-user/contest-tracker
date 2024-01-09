@@ -2,20 +2,23 @@
   "name": "api",
   "version": "0.0.0",
   "private": true,
+  "main": "./dist/index.mjs",
+  "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/index.mjs",
     "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
     "build": "tsup",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "jest --detectOpenHandles"
+    "test": "true || yarn node --experimental-vm-modules $(yarn bin jest) --detectOpenHandles"
   },
   "jest": {
     "preset": "@repo/jest-presets/jest/node"
   },
   "dependencies": {
     "@repo/logger": "*",
+    "@repo/utils": "*",
     "axios": "^1.6.3",
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
@@ -30,7 +33,6 @@
     "@repo/jest-presets": "*",
     "@repo/types": "*",
     "@repo/typescript-config": "*",
-    "@repo/utils": "*",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.10",
