@@ -8,7 +8,7 @@ import { router } from "./routes";
 
 const limiter = rateLimit({
   windowMs: 1000 * 60 * 15, // 15 minutes
-  max: 100, // limit each IP to 500 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
   standardHeaders: "draft-7",
 });
 
