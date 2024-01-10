@@ -16,13 +16,13 @@ export const getContests = async (
       atcoderContests,
       codeforcesContests,
       leetcodeContests,
-      // codechefContests,
+      codechefContests,
     ] = await Promise.all([
       contestTypes.ATCODER ? getAtcoderContests() : Promise.resolve([]),
       contestTypes.CF || contestTypes.ICPC || contestTypes.IOI
         ? getCodeforcesContests()
         : Promise.resolve([]),
-      // contestTypes.CODECHEF ? getCodechefContests() : Promise.resolve([]),
+      contestTypes.CODECHEF ? getCodechefContests() : Promise.resolve([]),
       contestTypes.LEETCODE ? getLeetcodeContests() : Promise.resolve([]),
     ]);
 
