@@ -17,22 +17,28 @@ export const getContests = async (
       codeforcesContests,
       leetcodeContests,
       codechefContests,
-    ] = await Promise.all([
+    ] = await Promise.allSettled([
       contestTypes.ATCODER ? getAtcoderContests() : Promise.resolve([]),
       contestTypes.CF || contestTypes.ICPC || contestTypes.IOI
         ? getCodeforcesContests()
         : Promise.resolve([]),
       contestTypes.CODECHEF ? getCodechefContests() : Promise.resolve([]),
       contestTypes.LEETCODE ? getLeetcodeContests() : Promise.resolve([]),
-    ]);
+    ]).then((results) =>
+      results.map((promise) =>
+        promise.status === "fulfilled" ? promise.value : []
+      )
+    );
 
     contests.push(
       ...atcoderContests,
       ...codeforcesContests.filter(
         (contest: IContest) => contestTypes[contest.type]
       ),
-      ...leetcodeContests
+      ...leetcodeContests,
+      ...codechefContests
     );
+    log(contests);
     return contests;
   } catch (err) {
     log("Error getCotnest service", err);
