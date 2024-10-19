@@ -130,3 +130,11 @@ export const convertTimeToSeconds = (timeString: string): number => {
 
   return toSeconds(hours, minutes);
 };
+
+export const convertDateISOToSeconds = (dateISO: string) => {
+  const isoString = '2024-10-09T20:00:00+05:30';
+  const date = new Date(isoString);
+  const seconds = Math.floor(date.getTime() / 1000);
+  
+  return seconds
+}

@@ -4,7 +4,7 @@ import type { ContestType, ContestSelection, IContest } from "@repo/types";
 import {
   getContests,
   getAtcoderContests,
-  getCodechefContests,
+  getCodechefContestsFromAPI,
   getCodeforcesContests,
   getLeetcodeContests,
 } from "../services/contests";
@@ -50,7 +50,7 @@ export const getContestController = async (
         break;
       }
       case "CODECHEF":
-        contestsData = await getCodechefContests();
+        contestsData = await getCodechefContestsFromAPI();
         throw new Error("Codechef contests not available");
         break;
       case "LEETCODE":

@@ -1,10 +1,12 @@
 // import type { ElementHandle } from "puppeteer";
-import { launch } from "puppeteer";
+import axios from "axios";
+import puppeteer, { launch } from "puppeteer";
 import { log } from "@repo/logger";
 import type { IContest } from "@repo/types";
 import {
   convertDateTimeToAbsoluteSeconds,
   convertTimeToSeconds,
+  convertDateISOToSeconds
 } from "@repo/utils";
 
 type PartialIContest = Partial<IContest> & {
@@ -22,6 +24,16 @@ export const getCodechefContests = async (): Promise<IContest[]> => {
     const browser = await launch({
       headless: true,
       defaultViewport: null,
+      executablePath:
+        process.env.NODE_ENV == "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : puppeteer.executablePath(),
+          args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--no-zygote",
+            "--single-process"
+          ]
     });
     const page = await browser.newPage();
     await page.setUserAgent(
@@ -97,3 +109,28 @@ export const getCodechefContests = async (): Promise<IContest[]> => {
     throw new Error("Error Scrapping Codechef Contests");
   }
 };
+
+
+export const getCodechefContestsFromAPI = async (): Promise<IContest[]> => {
+  try {
+    const res = await axios.get(`${baseURL}/api/list/contests/all`);
+    const upcomingContestData: IContest[] = [];
+    const upcomingContests = res.data.future_contests;
+    for(let i = 0; i<upcomingContests.length; i++) {
+      const upcomingContest = upcomingContests[i];
+      upcomingContestData.push({
+        name: upcomingContest.contest_name ?? "NA",
+        startTimeSeconds: convertDateISOToSeconds(upcomingContest.contest_start_date_iso),
+        href: `${baseURL}/${upcomingContest.contest_code}`,
+        type: "CODECHEF",
+        phase: "BEFORE",
+        frozen: false,
+        durationSeconds: upcomingContest.contest_duration * 60,
+      });
+    }
+    return upcomingContestData;
+  } catch (e) {
+    log("Codechef scrapper error: ", e);
+    throw new Error("Error Scraping Codechef Contests");
+  }
+}

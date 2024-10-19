@@ -2,7 +2,7 @@ import type { IContest, ContestSelection } from "@repo/types";
 import { log } from "@repo/logger";
 import {
   getAtcoderContests,
-  getCodechefContests,
+  getCodechefContestsFromAPI,
   getCodeforcesContests,
   getLeetcodeContests,
 } from "../scrappers";
@@ -22,7 +22,7 @@ export const getContests = async (
       contestTypes.CF || contestTypes.ICPC || contestTypes.IOI
         ? getCodeforcesContests()
         : Promise.resolve([]),
-      contestTypes.CODECHEF ? getCodechefContests() : Promise.resolve([]),
+      contestTypes.CODECHEF ? getCodechefContestsFromAPI() : Promise.resolve([]),
       contestTypes.LEETCODE ? getLeetcodeContests() : Promise.resolve([]),
     ]).then((results) =>
       results.map((promise) =>
@@ -41,7 +41,7 @@ export const getContests = async (
     log(contests);
     return contests;
   } catch (err) {
-    log("Error getCotnest service", err);
+    log("Error getContest service", err);
     return Promise.resolve([]);
   }
 };
@@ -49,6 +49,6 @@ export const getContests = async (
 export {
   getAtcoderContests,
   getCodeforcesContests,
-  getCodechefContests,
+  getCodechefContestsFromAPI,
   getLeetcodeContests,
 };

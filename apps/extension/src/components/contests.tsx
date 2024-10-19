@@ -51,6 +51,7 @@ export const Contests = forwardRef<
       const data = res.data.contests.filter(
         (contest) => contest.phase === "BEFORE" && contestTypes[contest.type]
       );
+      console.log(data)
 
       setContests(
         data.sort((a, b) => {
@@ -83,7 +84,7 @@ export const Contests = forwardRef<
       ) as Record<ContestType, boolean> | null;
 
       if (
-        Date.now() - time < 1000 * 60 * 60 * 60 * 24 &&
+        Date.now() - time < 1000 * 60 * 60 * 24 &&
         prevContestTypes &&
         JSON.stringify(
           Object.entries(contestTypes).sort(([aKey], [bKey]) =>
