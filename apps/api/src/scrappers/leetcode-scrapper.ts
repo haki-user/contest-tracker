@@ -7,37 +7,46 @@ import type { IContest } from "@repo/types";
 const baseURL = "https://leetcode.com";
 
 export const getLeetcodeContests = async (): Promise<IContest[]> => {
+  const query = `
+    query upcomingContests {
+      upcomingContests {
+        title
+        titleSlug
+        startTime
+      }
+    }
+  `;
+
   try {
-    const res = await axios.get(`${baseURL}/contest/`);
-    const $ = load(res.data as string, {
-      xmlMode: true,
-      decodeEntities: true,
-    });
-    // div -> div -> 2nd div
-    const container = $("div.swiper-wrapper").children("div");
+    const res = await axios.post(
+      `${baseURL}/graphql`,
+      {
+        query: query,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Referer: "https://leetcode.com",
+        },
+      }
+    );
+
     const upcomingContestData: IContest[] = [];
-    for (let i = 0; i < 2; i++) {
-      const contest = container.eq(i);
-      const contestData = contest.find("div.items-center").text().trim();
-      const contestName = contestData.match(/^(?<temp1>\w+\s\w+\s\d+)/g)?.at(0);
-      const contestDate = contestData
-        .match(/(?<=\d)(?<temp1>[a-zA-Z]+\s\w+:\w+\s\w+)/g)
-        ?.at(0); // Day hh:mm AM/PM
-      // convert contestDate (upcoming Day HH:MM AM/PM) to secondS
-      const contestDateSeconds = contestDate
-        ? dayHM12ToSeconds(contestDate)
-        : Number.MAX_VALUE;
-      const contestLink = baseURL + contest.find("a").attr("href");
+    const upcomingContests = res.data.data.upcomingContests;
+    console.log({upcomingContests}, res.data)
+    for (let i = 0; i < upcomingContests.length; i++) {
+      const upcomingContest = upcomingContests[i];
       upcomingContestData.push({
-        name: contestName ?? "NA",
-        startTimeSeconds: contestDateSeconds,
-        href: contestLink,
+        name: upcomingContest.title ?? "NA",
+        startTimeSeconds: upcomingContest.startTime,
+        href: `${baseURL}/contest/${upcomingContest.titleSlug}`,
         type: "LEETCODE",
         phase: "BEFORE",
         frozen: false,
         durationSeconds: 90 * 60,
       });
     }
+
     return upcomingContestData;
   } catch (err) {
     log("leetcode error", err);
