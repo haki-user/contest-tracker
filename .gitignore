@@ -16,3 +16,5 @@ contest-tracker*.zip
 apps/admin
 apps/blog
 apps/storefront
+*.pem
+*crx
