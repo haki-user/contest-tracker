@@ -51,7 +51,6 @@ export const getContestController = async (
       }
       case "CODECHEF":
         contestsData = await getCodechefContestsFromAPI();
-        throw new Error("Codechef contests not available");
         break;
       case "LEETCODE":
         contestsData = await getLeetcodeContests();
