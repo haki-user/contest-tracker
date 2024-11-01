@@ -31,7 +31,14 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ["node_modules/", "dist/", ".eslintrc.js", "**/*.css"],
+  ignorePatterns: [
+    "node_modules/",
+    "dist/",
+    ".eslintrc.js",
+    "**/*.css",
+    "postcss.config.js",
+    "tailwind.config.js",
+  ],
   // add rules configurations here
   rules: {
     "import/no-default-export": "off",

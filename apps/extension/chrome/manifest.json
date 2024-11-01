@@ -12,7 +12,8 @@
   "permissions": ["storage"],
   "host_permissions": [
     "https://codeforces.com/*",
-    "https://api-contest-tracker.onrender.com/*"
+    "https://api-contest-tracker.onrender.com/*",
+    "https://contest-tracker-ccgmbmfrgqcze5a8.centralindia-01.azurewebsites.net/*"
   ],
   "action": {
     "default_popup": "index.html"

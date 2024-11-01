@@ -51,7 +51,7 @@ export const Contests = forwardRef<
       const data = res.data.contests.filter(
         (contest) => contest.phase === "BEFORE" && contestTypes[contest.type]
       );
-      console.log(data)
+      console.log(data);
 
       setContests(
         data.sort((a, b) => {
@@ -130,11 +130,12 @@ export const Contests = forwardRef<
         display: "flex",
         flexDirection: "column",
         boxSizing: "border-box",
-        overflow: "visible",
         width: "100%",
-        height: "100%",
+        // flexGrow: 1,
+        // flexBasis: 1,
         padding: 6,
       }}
+      className=" items-center backdrop-blur-sm"
     >
       {contests.length > 0
         ? contests.map((contest) => {

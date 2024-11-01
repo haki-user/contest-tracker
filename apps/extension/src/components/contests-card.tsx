@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import type { IContest } from "@repo/types";
 import "./contestsCard.css";
 
-
 // const colors = {
 //   CF: "red",
 //   IOI: "red",
@@ -54,7 +53,6 @@ export function ContestsCard({
         // eslint-disable-next-line no-alert -- keeping alert for debugging
         // use browser notifications chrome
 
-
         // alert(`Contest is about to start`);
         // chrome.notifications.create(
         //   notificationId?: string,
@@ -87,7 +85,7 @@ export function ContestsCard({
   return (
     <div
       // href={`https://codeforces.com/contests/${id}`}
-      className="contestsCard-container"
+      className="contestsCard-container bg-opacity-90 bg-[#1C204B] backdrop-blur-3xl"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -96,11 +94,11 @@ export function ContestsCard({
         margin: 5,
         padding: 10,
         // backgroundColor: type==='ATCODER'?"#242831":"#1C204B",
-        backgroundColor: "#1C204B",
+        // backgroundColor: "#1C204B",
         color: "white",
         boxSizing: "border-box",
-        boxShadow:
-          "0px 1px 2px 0px rgba(0,255,255,0.2),1px 2px 4px 0px rgba(0,255,255,0.4), 2px 3px 6px 0px rgba(0,255,255,0.4), 2px 0px 10px 0px rgba(0,255,255,0.4)",
+        // boxShadow:
+        // "0px 1px 2px 0px rgba(0,255,255,0.2),1px 2px 4px 0px rgba(0,255,255,0.4), 2px 3px 6px 0px rgba(0,255,255,0.4), 2px 0px 10px 0px rgba(0,255,255,0.4)",
         fontWeight: 500,
       }}
     >
@@ -127,6 +125,7 @@ export function ContestsCard({
               fontSize: 14,
               fontWeight: 600,
             }}
+            className="hover:brightness-95 hover:underline"
           >
             {name}
           </span>
