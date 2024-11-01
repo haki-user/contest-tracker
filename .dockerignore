@@ -1,0 +1,17 @@
+/.cache
+/public/build
+/build
+/tmp
+out/
+dist/
+.git
+.github
+.next
+.turbo
+node_modules
+dist
+Dockerfile
+.dockerignore
+.git
+.github
+.vscode

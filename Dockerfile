@@ -1,29 +1,74 @@
-FROM node:alpine AS builder
-ENV WORKING_DIR=/usr/src/app
+# syntax=docker/dockerfile:1.4
 
-WORKDIR ${WORKING_DIR}
-RUN chown node:node ${WORKING_DIR}
+# -----------------------------------------------------------------------------
+# Base image with Node.js
+# -----------------------------------------------------------------------------
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS alpine
+RUN apk update && apk add --no-cache libc6-compat
 
-COPY --chown=node:node .npmrc .
-COPY --chown=node:node yarn.lock .
-COPY --chown=node:node *turbo.json .
-COPY --chown=node:node package* ./
+# -----------------------------------------------------------------------------
+# Setup Yarn and TurboRepo on the alpine base
+# -----------------------------------------------------------------------------
+FROM alpine as base
+RUN npm install -g turbo
 
-USER node
+# -----------------------------------------------------------------------------
+# Prune projects to isolate the target project
+# -----------------------------------------------------------------------------
+FROM base AS pruner
+ARG PROJECT=api
 
-RUN yarn --frozen-lockfile install
+WORKDIR /app
+COPY . .
 
-RUN yarn build
+# Prune the workspace, creating an isolated output for the specified project
+RUN turbo prune --scope=${PROJECT} --docker
 
-FROM node:alpine AS executer
+# -----------------------------------------------------------------------------
+# Build the project
+# -----------------------------------------------------------------------------
+FROM base AS builder
+ARG PROJECT=api
 
-ENV WORKING_DIR=/usr/src/app
+WORKDIR /app
 
-WORKDIR ${WORKING_DIR}
-COPY --from=builder ${WORKING_DIR} ${WORKING_DIR}
+# Copy lockfile and workspace configuration of isolated subworkspace
+COPY --from=pruner /app/out/yarn.lock ./yarn.lock
+COPY --from=pruner /app/out/json/ .
 
-COPY --chown=node:node . .
+# Install dependencies (cached)
+RUN --mount=type=cache,id=yarn-cache,target=/root/.cache/yarn \
+    yarn install --frozen-lockfile
 
-USER node
+# Copy source code of the isolated subworkspace
+COPY --from=pruner /app/out/full/ .
 
-CMD cd ./apps/api && yarn start
+# Build the project for the specified scope
+RUN yarn build --filter=${PROJECT}
+
+# Clean up production dependencies
+RUN rm -rf node_modules && rm -rf ./**/*/src
+RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
+
+# -----------------------------------------------------------------------------
+# Final image for production
+# -----------------------------------------------------------------------------
+FROM alpine AS runner
+ARG PROJECT=api
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+USER nodejs
+
+WORKDIR /app
+COPY --from=builder --chown=nodejs:nodejs /app .
+WORKDIR /app/apps/${PROJECT}
+
+ARG PORT=8080
+ENV PORT=${PORT}
+ENV NODE_ENV=production
+EXPOSE ${PORT}
+
+CMD node dist/index.js
+
