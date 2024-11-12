@@ -1,3 +1,4 @@
+[](https://countme.onrender.com/pvcb?username=contest-tracker)
 # Install
 - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/contests-tracker/)
 - [Edge](https://microsoftedge.microsoft.com/addons/detail/contest-tracker/dhjhnjlgfnfijhbhibgbkmakdbfokjpm)
